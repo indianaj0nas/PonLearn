@@ -12,6 +12,8 @@ public class HorsePart : MonoBehaviour
     public Sprite corretIcon;
     public Sprite wrongIcon;
     public GameObject selectorContainer;
+    public float selectorButtonAnimSpeed;
+    public AnimationCurve selectorAnimCurve;
 
     [System.Serializable]
     public class PartState
@@ -21,6 +23,7 @@ public class HorsePart : MonoBehaviour
         public Sprite stateSprite;
         public string stateDescription;
         public Vector3 descriptionPosition;
+        [HideInInspector]
         public Vector3 selectorPosition;
         public Sprite selectorSpriteEmpty;
         public Sprite selectorSpriteFilled;
@@ -59,6 +62,7 @@ public class HorsePart : MonoBehaviour
         for (int i = 0; i < partStates.Count; i++)
         {
             GameObject selector = partStates[i].selectorButton;
+            partStates[i].selectorPosition = partStates[i].selectorButton.transform.localPosition;
             selector.GetComponent<SelectorButton>().stateNumber = i;
             selector.GetComponent<SelectorButton>().horsePartHandler = gameObject;
             //selector.transform.localPosition = partStates[i].selectorPosition;
@@ -106,13 +110,28 @@ public class HorsePart : MonoBehaviour
     {
         StartCoroutine("SelectedPartFeedback");
         selectorContainer.gameObject.SetActive(true);
+        for (int i = 0; i < partStates.Count; i++)
+        {
+            IEnumerator move = MoveToPoint(partStates[i].selectorButton, selectorContainer.transform.localPosition, partStates[i].selectorPosition, selectorAnimCurve, selectorButtonAnimSpeed);
+            StartCoroutine(move);
+        }
     }
 
     public void UnSelectPart()
     {
-        selectorContainer.gameObject.SetActive(false);
         SetState(0);
+        for (int i = 0; i < partStates.Count; i++)
+        {
+            IEnumerator move = MoveToPoint(partStates[i].selectorButton, partStates[i].selectorPosition, selectorContainer.transform.localPosition, selectorAnimCurve, selectorButtonAnimSpeed);
+            StartCoroutine(move);
+        }
+        Invoke("DeactiveOnUnselect", selectorButtonAnimSpeed / 2);
         descriptionObj.SetActive(false);
+    }
+
+    void DeactiveOnUnselect()
+    {
+        selectorContainer.gameObject.SetActive(false);
     }
 
     IEnumerator SelectedPartFeedback()
@@ -123,5 +142,16 @@ public class HorsePart : MonoBehaviour
         partObj.transform.localScale = new Vector3(1f, 1f, 1f);
         partObj.GetComponent<SpriteRenderer>().color = Color.white;
         yield return null;
+    }
+
+    public IEnumerator MoveToPoint(GameObject moveThis, Vector3 pos1, Vector3 pos2, AnimationCurve ac, float time)
+    {
+        float timer = 0.0f;
+        while (timer <= time)
+        {
+            moveThis.transform.localPosition = Vector3.Lerp(pos1, pos2, ac.Evaluate(timer / time));
+            timer += Time.deltaTime;
+            yield return null;
+        }
     }
 }

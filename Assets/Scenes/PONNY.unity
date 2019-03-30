@@ -1380,7 +1380,7 @@ MonoBehaviour:
   verticalLimitMode: 2
   leftoverText: 
   textMaterial: {fileID: 2100000, guid: e490a80c3724140c0ad176edb075a09e, type: 2}
-  textMesh: {fileID: 880600317}
+  textMesh: {fileID: 497459822}
   rawTopLeftBounds: {x: 0, y: -59.71, z: 0}
   rawBottomRightBounds: {x: -155.6, y: 0, z: 0}
   rawBottomRightTextBounds: {x: 138.9375, y: -24, z: 0}
@@ -1822,7 +1822,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!43 &880600317
+--- !u!43 &497459822
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2209,7 +2209,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   animSpeed: 0.7
-  jumpToPoint: 1
+  jumpToPoint: 0
 --- !u!1001 &1388027631
 Prefab:
   m_ObjectHideFlags: 0
@@ -2326,6 +2326,31 @@ MonoBehaviour:
   corretIcon: {fileID: 21300000, guid: 8e121b072c2164e979438d1c5d5c970b, type: 3}
   wrongIcon: {fileID: 21300000, guid: 66924ecfe2a7840fc8832a5875afc27d, type: 3}
   selectorContainer: {fileID: 1512387289}
+  selectorButtonAnimSpeed: 0.5
+  selectorAnimCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   partStates:
   - selectorButton: {fileID: 1588950086}
     statePosition: {x: 0, y: 0, z: 0}
