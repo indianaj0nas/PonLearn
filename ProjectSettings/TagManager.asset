@@ -50,3 +50,6 @@ TagManager:
   - name: Infront of horse
     uniqueID: 3391344795
     locked: 0
+  - name: Button
+    uniqueID: 1296924339
+    locked: 0
