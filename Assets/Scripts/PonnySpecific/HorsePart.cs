@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HorsePart : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class HorsePart : MonoBehaviour
         public GameObject selectorObj;
         public Vector3 selectorPosition;
         public Sprite selectorSprite;
+        public bool correctState;
     }
 
     [SerializeField]
@@ -34,8 +36,9 @@ public class HorsePart : MonoBehaviour
     void Start()
     {
         cameraObj = GameObject.Find("Main Camera").GetComponent<Camera>();
-        descriptionObj = GameObject.Find("Canvas/Description");
+        descriptionObj = GameObject.Find("Canvas/FeedbackBox");
         descriptionText = descriptionObj.transform.GetChild(0).GetComponent<SuperTextMesh>();
+        descriptionObj.SetActive(false);
         spriteRenderer = partObj.GetComponent<SpriteRenderer>();
 
         InitiatePartStates();
@@ -73,12 +76,29 @@ public class HorsePart : MonoBehaviour
 
         spriteRenderer.sprite = currentState.stateSprite;
         partObj.transform.localPosition = currentState.statePosition;
+        descriptionObj.SetActive(true);
         descriptionObj.transform.position = cameraObj.GetComponent<Camera>().WorldToScreenPoint(currentState.descriptionPosition);
         descriptionText.text = currentState.stateDescription;
+        Image imageComp = descriptionObj.transform.GetChild(1).gameObject.GetComponent<Image>();
+
+        if (currentState.correctState == true)
+        {
+            imageComp.color = Color.green;
+        }
+        else
+        {
+            imageComp.color = Color.red;
+        }
     }
 
     void SelectedPart()
     {
         stateContainer.gameObject.SetActive(true);
+    }
+
+    public void UnSelectPart()
+    {
+        stateContainer.gameObject.SetActive(false);
+        descriptionObj.SetActive(false);
     }
 }
