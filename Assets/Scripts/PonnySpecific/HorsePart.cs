@@ -9,17 +9,21 @@ public class HorsePart : MonoBehaviour
     public string partName;
     public bool selected = false;
     public GameObject partObj;
+    public Sprite corretIcon;
+    public Sprite wrongIcon;
+    public GameObject selectorContainer;
 
     [System.Serializable]
     public class PartState
     {
+        public GameObject selectorButton;
         public Vector3 statePosition;
         public Sprite stateSprite;
         public string stateDescription;
         public Vector3 descriptionPosition;
-        public GameObject selectorObj;
         public Vector3 selectorPosition;
-        public Sprite selectorSprite;
+        public Sprite selectorSpriteEmpty;
+        public Sprite selectorSpriteFilled;
         public bool correctState;
     }
 
@@ -28,7 +32,6 @@ public class HorsePart : MonoBehaviour
 
     private GameObject descriptionObj;
     private Camera cameraObj;
-    private GameObject stateContainer;
     private PartState currentState;
     private SpriteRenderer spriteRenderer;
     private SuperTextMesh descriptionText;
@@ -51,54 +54,74 @@ public class HorsePart : MonoBehaviour
 
     void InitiatePartStates()
     {
-        stateContainer = new GameObject("StatesContainer");
-        stateContainer.transform.parent = gameObject.transform;
-        stateContainer.transform.localPosition = Vector3.zero;
-        stateContainer.SetActive(false);
+        selectorContainer.SetActive(false);
 
         for (int i = 0; i < partStates.Count; i++)
         {
-            GameObject selector = partStates[i].selectorObj = new GameObject("Selector" + i);
-            selector.AddComponent<SpriteRenderer>();
-            selector.AddComponent<SelectorButton>();
+            GameObject selector = partStates[i].selectorButton;
             selector.GetComponent<SelectorButton>().stateNumber = i;
             selector.GetComponent<SelectorButton>().horsePartHandler = gameObject;
-            selector.GetComponent<SpriteRenderer>().sortingLayerName = "Button";
-            selector.transform.parent = stateContainer.transform;
-            selector.transform.localPosition = partStates[i].selectorPosition;
-            selector.GetComponent<SpriteRenderer>().sprite = partStates[i].selectorSprite;
+            //selector.transform.localPosition = partStates[i].selectorPosition;
+            selector.GetComponent<SpriteRenderer>().sprite = partStates[i].selectorSpriteEmpty;
         }
     }
 
     public void SetState(int stateNumber)
     {
+        for (int i = 0; i < partStates.Count; i++)
+        {
+            if (i == stateNumber)
+            {
+                partStates[i].selectorButton.GetComponent<SpriteRenderer>().sprite = partStates[i].selectorSpriteFilled;
+            }
+            else
+            {
+                partStates[i].selectorButton.GetComponent<SpriteRenderer>().sprite = partStates[i].selectorSpriteEmpty;
+            }
+        }
+
         currentState = partStates[stateNumber];
 
         spriteRenderer.sprite = currentState.stateSprite;
         partObj.transform.localPosition = currentState.statePosition;
         descriptionObj.SetActive(true);
-        descriptionObj.transform.position = cameraObj.GetComponent<Camera>().WorldToScreenPoint(currentState.descriptionPosition);
+        //descriptionObj.transform.position = cameraObj.GetComponent<Camera>().WorldToScreenPoint(currentState.descriptionPosition);
+        descriptionObj.GetComponent<FeedbackBox>().MoveToPoint(currentState.descriptionPosition);
         descriptionText.text = currentState.stateDescription;
         Image imageComp = descriptionObj.transform.GetChild(1).gameObject.GetComponent<Image>();
 
         if (currentState.correctState == true)
         {
             imageComp.color = Color.green;
+            imageComp.sprite = corretIcon;
         }
         else
         {
             imageComp.color = Color.red;
+            imageComp.sprite = wrongIcon;
         }
     }
 
     void SelectedPart()
     {
-        stateContainer.gameObject.SetActive(true);
+        StartCoroutine("SelectedPartFeedback");
+        selectorContainer.gameObject.SetActive(true);
     }
 
     public void UnSelectPart()
     {
-        stateContainer.gameObject.SetActive(false);
+        selectorContainer.gameObject.SetActive(false);
+        SetState(0);
         descriptionObj.SetActive(false);
+    }
+
+    IEnumerator SelectedPartFeedback()
+    {
+        partObj.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+        partObj.GetComponent<SpriteRenderer>().color = Color.gray;
+        yield return new WaitForSeconds(0.1f);
+        partObj.transform.localScale = new Vector3(1f, 1f, 1f);
+        partObj.GetComponent<SpriteRenderer>().color = Color.white;
+        yield return null;
     }
 }

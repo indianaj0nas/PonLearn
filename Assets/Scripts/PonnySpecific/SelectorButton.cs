@@ -7,19 +7,24 @@ public class SelectorButton : MonoBehaviour
     public int stateNumber;
     public GameObject horsePartHandler;
 
-    void Start()
-    {
-        gameObject.AddComponent<BoxCollider2D>();
-        GetComponent<BoxCollider2D>().isTrigger = true;
-    }
-
     void OnMouseDown()
     {
         SendStateChange();
+        StartCoroutine("ClickFeedback");
     }
 
     void SendStateChange()
     {
         horsePartHandler.GetComponent<HorsePart>().SetState(stateNumber);
+    }
+
+    IEnumerator ClickFeedback()
+    {
+        transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+        GetComponent<SpriteRenderer>().color = Color.gray;
+        yield return new WaitForSeconds(0.1f);
+        transform.localScale = new Vector3(1f, 1f, 1f);
+        GetComponent<SpriteRenderer>().color = Color.white;
+        yield return null;
     }
 }
