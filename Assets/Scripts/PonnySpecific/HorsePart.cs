@@ -108,7 +108,7 @@ public class HorsePart : MonoBehaviour
 
     void SelectedPart()
     {
-        StartCoroutine("SelectedPartFeedback");
+        //StartCoroutine("SelectedPartFeedback");
         selectorContainer.gameObject.SetActive(true);
         for (int i = 0; i < partStates.Count; i++)
         {
