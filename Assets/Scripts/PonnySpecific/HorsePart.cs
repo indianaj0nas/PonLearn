@@ -19,8 +19,10 @@ public class HorsePart : MonoBehaviour
     public class PartState
     {
         public GameObject selectorButton;
-        public Vector3 statePosition;
         public Sprite stateSprite;
+        public Sprite muscleSprite;
+        public Sprite skeletonSprite;
+        public Sprite transparentSprite;
         public string stateDescription;
         public Vector3 descriptionPosition;
         [HideInInspector]
@@ -38,6 +40,8 @@ public class HorsePart : MonoBehaviour
     private PartState currentState;
     private SpriteRenderer spriteRenderer;
     private SuperTextMesh descriptionText;
+    private int stateNumb;
+    private string horseMode;
 
     void Start()
     {
@@ -72,6 +76,8 @@ public class HorsePart : MonoBehaviour
 
     public void SetState(int stateNumber)
     {
+        stateNumb = stateNumber;
+
         for (int i = 0; i < partStates.Count; i++)
         {
             if (i == stateNumber)
@@ -86,8 +92,9 @@ public class HorsePart : MonoBehaviour
 
         currentState = partStates[stateNumber];
 
-        spriteRenderer.sprite = currentState.stateSprite;
-        partObj.transform.localPosition = currentState.statePosition;
+        //spriteRenderer.sprite = currentState.stateSprite;
+        ChangedMode(horseMode);
+
         descriptionObj.SetActive(true);
         //descriptionObj.transform.position = cameraObj.GetComponent<Camera>().WorldToScreenPoint(currentState.descriptionPosition);
         descriptionObj.GetComponent<FeedbackBox>().MoveToPoint(currentState.descriptionPosition);
@@ -153,5 +160,20 @@ public class HorsePart : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+    }
+
+    public void ChangedMode(string horseModeString)
+    {
+        Debug.Log(horseModeString);
+        horseMode = horseModeString;
+
+        if (horseModeString == "normal" || horseModeString == null)
+            spriteRenderer.sprite = partStates[stateNumb].stateSprite;
+        else if (horseModeString == "skeleton")
+            spriteRenderer.sprite = partStates[stateNumb].skeletonSprite;
+        else if (horseModeString == "muscles")
+            spriteRenderer.sprite = partStates[stateNumb].muscleSprite;
+        else if (horseModeString == "transparent")
+            spriteRenderer.sprite = partStates[stateNumb].transparentSprite;
     }
 }
