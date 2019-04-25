@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Uppslagsverk.unity
     guid: 039a07f9841aa430c85bd872ea6bb96f
+  - enabled: 1
+    path: Assets/Scenes/AmerikanskCollar.unity
+    guid: fbb6760c6c5214fc595d0c0f16ef69c9
   m_configObjects: {}
